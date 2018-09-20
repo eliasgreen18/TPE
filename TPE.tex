@@ -1,0 +1,62 @@
+\documentclass[a4paper]{article}
+\input{Algo1Macros}
+
+\usepackage{a4wide}
+\usepackage{amsmath, amscd, amssymb, amsthm, latexsym}
+\usepackage[spanish,activeacute]{babel}
+\usepackage{enumerate}
+
+\setlength{\parskip}{0.1em}
+\usepackage{caratula} % Version modificada para usar las macros de algo1 de ~> https://github.com/bcardiff/dc-tex
+
+\begin{document}
+	
+	\titulo{TP de Especificación}
+	\subtitulo{Juego de la vida toroidal}
+	\fecha{\today}
+	\materia{Algoritmos y Estructuras de Datos I}
+	\grupo{Grupo: Compubiólogos}
+	
+	\newcommand{\senial}{\textit{se\~nal}}
+	
+	% Pongan cuantos integrantes quieran
+	\integrante{Cerdeira, Elías Nahuel}{692/12}{ecerdeira@dc.uba.ar}
+	\integrante{Rodriguez Ferrante, Guadalupe}{60/12}{guadarodriguezf@gmail.com}
+	
+	\maketitle
+	
+	\section{Problemas}
+	\begin{proc}{esValido}{\In t: $toroide$, \Out result: $\bool$}{}
+		\pre{\True}
+		\post{result \iff valido(t) }
+	\end{proc}
+	
+	\begin{proc}{posicionesVivas}{\In t: $toroide$, \Out result: \TLista{\ent\times\ent}}{}
+		\pre{valido(t)}
+		\post{\longitud{result}=cantVivas(t) \land noRepetidos(result) \land }
+	\end{proc}
+	
+	\begin{proc}{densidadPoblacion}{\In t: $toroide$, \Out result: \rea}{}
+		\pre{valido(t)}
+		\post{result = cantVivas(t)/(\longitud {t}\times \longitud{t[0]})}
+	\end{proc}
+	
+	
+	
+	
+	\section{Predicados y Auxiliares generales}
+	
+	\subsection{Predicados}
+	
+	\auxpred {valido}{t:$toroide$}{\longitud{t}>0 \yLuego \paraTodo{i, j}{0}{\longitud{t}} \implicaLuego (\longitud {t[i]}= \longitud{t[j]} \land \longitud {t[i]}>0)} \\
+	
+	\auxpred {noRepetidos}{t:$toroide$}{\paraTodo{i,j}{(0}{\longitud{t} \land i\ne j) \implicaLuego t[i] \ne t[j]}} \\
+	
+	\subsection{Funciones Auxiliares}
+	
+	\aux{cantVivas}{t: $toroide$}{\ent}{\sum_{k=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[k]}-1}\IfThenElse{(t[k][j]=\True)}{1}{0}} \\
+	
+	\section{Decisiones tomadas}
+	% Sólo para decisiones de alto nivel, no para explicar la solución a los ejercicios: CONSULTAR!
+	
+\end{document}
