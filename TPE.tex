@@ -33,7 +33,7 @@
 	
 	\begin{proc}{posicionesVivas}{\In t: $toroide$, \Out result: \TLista{\ent\times\ent}}{}
 		\pre{valido(t)}
-		\post{\longitud{result}=cantVivas(t) \land noRepetidos(result) \land }
+		\post{\longitud{result}=cantVivas(t) \land noRepetidos(result) \land \paraTodo{i}{(0}{\longitud{result}-1} \implicaLuego(( 0 \leq result[i][0] < \longitud{t}-1) \land(  0 \leq result[i][1] < \longitud{t[0]}-1)) \yLuego (t[result[i][0]][result[i][1]]= \True))}}
 	\end{proc}
 	
 	\begin{proc}{densidadPoblacion}{\In t: $toroide$, \Out result: \rea}{}
