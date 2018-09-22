@@ -38,6 +38,11 @@
 	    \begin{proc}{densidadPoblacion}{\In t: $toroide$, \Out result: \rea}{}
 		    \pre{valido(t)}
 		    \post{result = cantVivas(t)/(\longitud {t}\times \longitud{t[0]})}
+	    \end{proc} \\
+	    
+	    \begin{proc}{evolucionDePosicion}{\In t: $toroide$, \In posicion: \ent \times \ent, \Out result: \bool}{}
+		    \pre{valido(t) \yLuego (0 \leq posicion[0] < \longitud{t} \land 0 \leq posicion[1] < \longitud{t[0]}}
+		    \post{result = \IfThenElse{t[posicion[0]][posicion[1]]}{siVivaLuego(t, posicion)}{siMuertaLuego(t, posicion)}}
 	    \end{proc}
 	
 	
@@ -65,6 +70,10 @@
         	\auxpred{esVecinaEnDiagonalIzq}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(casilla[1]=\longitud{t[0]}-1 \land vecina[1]= 0 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]+1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
         	
         	\auxpred{esVecina}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(esToroidePequeno (t) \land (\longitud{t}>1\land \longitud {t[0]-1}>1) \land casilla \ne vecina) \lor (\neg (esToroidePequeno(t)) \yLuego (esVecinaEnFila(casilla, vecina, t) \lor esVecinaEnColumna(casilla, vecina, t) \lor esVecinaEnDiagonalDer(casilla, vecina, t) \lor esVecinaEnDiagonalIzq(casilla, vecina, t)))} \\
+        	
+        	\auxpred{siVivaLuego}{t: $toroide$, posicion: \ent \times \ent}{1<cantVecinasVivas(t, posicion)<4}\\
+        	
+        	\auxpred{siMuertaLuego}{t: $toroide$, posicion: \ent \times \ent}{cantVecinasVivas(t, posicion)=3}\\
 	
     	\subsection{Funciones Auxiliares}
 	
