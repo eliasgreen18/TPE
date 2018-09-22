@@ -56,7 +56,7 @@
         	
         	\auxpred{esToroidePequeno}{t: $toroide$ }{\longitud{t} \leq 3 \land \longitud{t[0]} \leq 3} \\
         	
-        	\auxpred{esVecinaEnFila}{posicion : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{posicion[1]=vecina[1] \yLuego ((casilla[0]=\longitud{t}-1 \implica (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \land (casilla[0]=0 \implica (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \land (\paraTodo{i}{(1}{\longitud{t}-2} \yLuego casilla[0]=i) \implica (vecina[0]=i-1) \lor vecina[0]=i+1))} \\
+        	\auxpred{esVecinaEnFila}{posicion : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{posicion[1]=vecina[1] \yLuego ((casilla[0]=\longitud{t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \lor (casilla[0]=0 \land (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \oLuego ( (vecina[0]=casilla[0]-1) \lor vecina[0]=casilla[0]+1))} \\
         	
         	\auxpred{esVecinaEnColumna}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{} \\
 
