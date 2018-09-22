@@ -56,11 +56,11 @@
         	
         	\auxpred{esToroidePequeno}{t: $toroide$ }{\longitud{t} \leq 3 \land \longitud{t[0]} \leq 3} \\
         	
-        	\auxpred{esVecinaEnFila}{posicion : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{posicion[0]=vecina[0] \yLuego ((casilla[1]=\longitud{t[0]}-1 \land (vecina[1]=0 \lor vecina[1]=\longitud{t[0]}-2)) \lor (casilla[1]=0 \land (vecina[1]=\longitud{t[0]}-1 \lor vecina [1]=1)) \oLuego ( (vecina[1]=casilla[1]-1) \lor vecina[1]=casilla[1]+1))} \\
+        	\auxpred{esVecinaEnFila}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla[0]=vecina[0] \land ((casilla[1]=\longitud{t[0]}-1 \land (vecina[1]=0 \lor vecina[1]=\longitud{t[0]}-2)) \lor (casilla[1]=0 \land (vecina[1]=\longitud{t[0]}-1 \lor vecina [1]=1)) \oLuego ( (vecina[1]=casilla[1]-1) \lor vecina[1]=casilla[1]+1))} \\
         	
-        	\auxpred{esVecinaEnColumna}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{posicion[1]=vecina[1] \yLuego ((casilla[0]=\longitud{t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \lor (casilla[0]=0 \land (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \oLuego ( (vecina[0]=casilla[0]-1) \lor vecina[0]=casilla[0]+1))} \\
+        	\auxpred{esVecinaEnColumna}{casilla : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{casilla[1]=vecina[1] \land ((casilla[0]=\longitud{t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \lor (casilla[0]=0 \land (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \oLuego ( (vecina[0]=casilla[0]-1) \lor vecina[0]=casilla[0]+1))} \\
 
-        	\auxpred{esVecinaEnDiagonalDer}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{} \\
+        	\auxpred{esVecinaEnDiagonalDer}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{(casilla[1]=0 \land vecina[1]= \longitud{t[0]}-1 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]-1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
 
         	\auxpred{esVecinaEnDiagonalIzq}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{} \\
         	
