@@ -62,7 +62,7 @@
 
         	\auxpred{esVecinaEnDiagonalDer}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{(casilla[1]=0 \land vecina[1]= \longitud{t[0]}-1 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]-1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
 
-        	\auxpred{esVecinaEnDiagonalIzq}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{} \\
+        	\auxpred{esVecinaEnDiagonalIzq}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{(casilla[1]=\longitud{t[0]}-1 \land vecina[1]= 0 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]+1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
         	
         	\auxpred{esVecina}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{} \\
 	
