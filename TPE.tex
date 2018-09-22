@@ -58,17 +58,19 @@
         	
         	\auxpred{esVecinaEnFila}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla[0]=vecina[0] \land ((casilla[1]=\longitud{t[0]}-1 \land (vecina[1]=0 \lor vecina[1]=\longitud{t[0]}-2)) \lor (casilla[1]=0 \land (vecina[1]=\longitud{t[0]}-1 \lor vecina [1]=1)) \oLuego ( (vecina[1]=casilla[1]-1) \lor vecina[1]=casilla[1]+1))} \\
         	
-        	\auxpred{esVecinaEnColumna}{casilla : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{casilla[1]=vecina[1] \land ((casilla[0]=\longitud{t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \lor (casilla[0]=0 \land (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \oLuego ( (vecina[0]=casilla[0]-1) \lor vecina[0]=casilla[0]+1))} \\
+        	\auxpred{esVecinaEnColumna}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla[1]=vecina[1] \land ((casilla[0]=\longitud{t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \lor (casilla[0]=0 \land (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \oLuego ( (vecina[0]=casilla[0]-1) \lor vecina[0]=casilla[0]+1))} \\
 
-        	\auxpred{esVecinaEnDiagonalDer}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{(casilla[1]=0 \land vecina[1]= \longitud{t[0]}-1 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]-1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
+        	\auxpred{esVecinaEnDiagonalDer}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(casilla[1]=0 \land vecina[1]= \longitud{t[0]}-1 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]-1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
 
-        	\auxpred{esVecinaEnDiagonalIzq}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{(casilla[1]=\longitud{t[0]}-1 \land vecina[1]= 0 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]+1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
+        	\auxpred{esVecinaEnDiagonalIzq}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(casilla[1]=\longitud{t[0]}-1 \land vecina[1]= 0 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]+1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
         	
-        	\auxpred{esVecina}{Posicion : (\ent \times \ent), posvec : (\ent \times \ent), t: $toroide$ }{} \\
+        	\auxpred{esVecina}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(esToroidePequeno (t) \land (\longitud{t}>1\land \longitud {t[0]-1}>1) \land casilla \ne vecina) \lor (\neg (esToroidePequeno(t)) \yLuego (esVecinaEnFila(casilla, vecina, t) \lor esVecinaEnColumna(casilla, vecina, t) \lor esVecinaEnDiagonalDer(casilla, vecina, t) \lor esVecinaEnDiagonalIzq(casilla, vecina, t)))} \\
 	
     	\subsection{Funciones Auxiliares}
 	
       	\aux{cantVivas}{t:$toroide$}{\ent}{\sum_{k=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[k]}-1}\IfThenElse{(t[k][j]=\True)}{1}{0}}
+      	
+      	\aux{cantVecinasVivas}{t:$toroide$, posicion :\ent \times \ent}{\ent}{\sum_{k=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[k]}-1}\IfThenElse{(esVecina(posicion, (j, k), t) \land t[k][j]=\True)}{1}{0}}
 	
         	% Podría ser una auxiliar que arroje la cantidad de celdas posicionesTotales(t);
 	
