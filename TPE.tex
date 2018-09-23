@@ -30,18 +30,19 @@
     		\post{result \iff valido(t) }
     	\end{proc} \\
 	
+	    %Acá tengo la duda con los "-1" que pusiste.
     	\begin{proc}{posicionesVivas}{\In t: $toroide$, \Out result: \TLista{\ent\times\ent}}{}
     		\pre{valido(t)}
-    		\post{\longitud{result}=cantVivas(t) \land noRepetidos(result) \land \paraTodo{i}{(0}{\longitud{result}-1 \implicaLuego(( 0 \leq result[i][0] < \longitud{t}-1) \land(  0 \leq result[i][1] < \longitud{t[0]}-1)) \yLuego (t[result[i][0]][result[i][1]]= \True))}}
+    		\post{\longitud{result}=cantVivas(t) \land noRepetidos(result) \land (\forall i:\ent) ((enRango(i,result) \implicaLuego (enRango(result[i][0],t) \land enRango(result[i][1],t[0]) ) \yLuego  estaViva(t[result[i][0]][result[i][1]])))}
 	    \end{proc} \\
 	
 	    \begin{proc}{densidadPoblacion}{\In t: $toroide$, \Out result: \rea}{}
 		    \pre{valido(t)}
-		    \post{result = cantVivas(t)/(\longitud {t}\times \longitud{t[0]})}
+		    \post{result = cantVivas(t)/posicionesTotales(t)}
 	    \end{proc} \\
 	    
-	    \begin{proc}{evolucionDePosicion}{\In t: $toroide$, \In posicion: \ent \times \ent, \Out result: \bool}{}
-		    \pre{valido(t) \yLuego (0 \leq posicion[0] < \longitud{t} \land 0 \leq posicion[1] < \longitud{t[0]}}
+	    \begin{proc}{evolucionDePosicion}{\In t: $toroide$, \In posicion: \ent \times \ent, \Out result: $\bool$}{}
+		    \pre{valido(t) \yLuego (enRango(posicion[0],t) \land enRango(posicion[1],t[0])}
 		    \post{result = posicionModificada(t, posicion)}
 	    \end{proc} \\
 	    
@@ -49,8 +50,41 @@
 		    \pre{valido(t)}
 		    \post{\paraTodo{i}{0}{\longitud{t}} \implicaLuego \paraTodo{j}{0}{\longitud{t[0]}}\implicaLuego t[i][j]=posicionModificada(t, (i, j))}
 	    \end{proc} \\
+	    
+	    \begin{proc}{evolucionMultiple}{\Inout t: $toroide$, \In k: \ent, \Out result: $toroide$}{}
+    		\pre{valido(t)}
+    		\post{}
+    	\end{proc} \\
+    	
+    	\begin{proc}{esPeriodico}{\In t: $toroide$, \Inout p: \ent, \Out result: \bool}{}
+    		\pre{valido(t)}
+    		\post{}
+    	\end{proc} \\
+    	
+    	\begin{proc}{primosLejanos}{\In t1: $toroide$, \In t2: $toroide$, out primos: \bool}{}
+    		\pre{valido(t)}
+    		\post{}
+    	\end{proc} \\
+    	
+    	\begin{proc}{seleccionNatural}{\In ts: \TLista{$toroide$}, \Out res: $toroide$}{}
+    		\pre{valido(t)}
+    		\post{}
+    	\end{proc} \\
+    	
+    	\begin{proc}{fusionar}{\In t1: $toroide$, \In t2: $toroide$, \Out res: $toroide$}{}
+    		\pre{valido(t)}
+    		\post{}
+    	\end{proc} \\
 	
-	
+	    \begin{proc}{vistaTrasladada}{\In t1: $toroide$, \In t2: $toroide$, \Out res: \bool}{}
+    		\pre{valido(t)}
+    		\post{}
+    	\end{proc} \\
+    	
+    	\begin{proc}{enCrecimiento}{\In t: $toroide$, \Out res: \bool}{}
+    		\pre{valido(t)}
+    		\post{}
+    	\end{proc} \\
 	
 	\section{Predicados y Auxiliares generales}
 	
@@ -60,40 +94,38 @@
 	        
 	        %Recordar (Elías para Elías)
 	        \auxpred{enRango}{i:\ent, s:\TLista{T}}{ $0 \leq i < \longitud{s}$} \\
+	        
+	        \auxpred{estaViva}{t:$toroide$, i:\ent, j:\ent}{t[i][j]=\True} \\
 	
         	\auxpred {noRepetidos}{t:$toroide$}{\paraTodo{i,j}{(0}{\longitud{t} \land i\ne j) \implicaLuego t[i] \ne t[j]}} \\
         	
-        	\auxpred{esToroidePequeno}{t: $toroide$ }{\longitud{t} \leq 3 \land \longitud{t[0]} \leq 3} \\
+        	\auxpred{esVecinaEnFila}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla[0]=vecina[0] \yLuego ((casilla[1]=\longitud{t[0]}-1 \land (vecina[1]=0 \lor vecina[1]=\longitud{t[0]}-2)) \lor (casilla[1]=0 \land (vecina[1]=\longitud{t[0]}-1 \lor vecina [1]=1)) \oLuego ( (vecina[1]=casilla[1]-1) \lor vecina[1]=casilla[1]+1))} \\
         	
-        	\auxpred{esVecinaEnFila}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla[0]=vecina[0] \land ((casilla[1]=\longitud{t[0]}-1 \land (vecina[1]=0 \lor vecina[1]=\longitud{t[0]}-2)) \lor (casilla[1]=0 \land (vecina[1]=\longitud{t[0]}-1 \lor vecina [1]=1)) \oLuego ( (vecina[1]=casilla[1]-1) \lor vecina[1]=casilla[1]+1))} \\
-        	
-        	\auxpred{esVecinaEnColumna}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla[1]=vecina[1] \land ((casilla[0]=\longitud{t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \lor (casilla[0]=0 \land (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \oLuego ( (vecina[0]=casilla[0]-1) \lor vecina[0]=casilla[0]+1))} \\
+        	\auxpred{esVecinaEnColumna}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla[1]=vecina[1] \yLuego ((casilla[0]=\longitud{t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \lor (casilla[0]=0 \land (vecina[0]=\longitud{t}-1 \lor vecina [0]=1)) \oLuego ( (vecina[0]=casilla[0]-1) \lor vecina[0]=casilla[0]+1))} \\
 
-        	\auxpred{esVecinaEnDiagonalDer}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(casilla[1]=0 \land vecina[1]= \longitud{t[0]}-1 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]-1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
+        	\auxpred{esVecinaEnDiagonalDer}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(casilla[1]=0 \land vecina[1]= \longitud{t[0]}-1 \yLuego ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \oLuego vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \oLuego vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (casilla[1]\ne 0 \yLuego vecina[1]=casilla[1]-1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
 
-        	\auxpred{esVecinaEnDiagonalIzq}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(casilla[1]=\longitud{t[0]}-1 \land vecina[1]= 0 \land ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \lor vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \lor vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (vecina[1]=casilla[1]+1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
+        	\auxpred{esVecinaEnDiagonalIzq}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(casilla[1]=\longitud{t[0]}-1 \land vecina[1]= 0 \yLuego ((casilla[0]= 0 \land (vecina[0]= \longitud{t}-1 \oLuego vecina[0]=1)) \lor (casilla[0]=\longitud {t}-1 \land (vecina[0]=0 \oLuego vecina[0]=\longitud{t}-2)) \oLuego (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))) \oLuego (casilla[1] \ne \longitud{t[0]}-1 \yLuego vecina[1]=casilla[1]+1 \land (vecina[0]=casilla[0]-1 \lor vecina[0]=casilla[0]+1))} \\
         	
-        	\auxpred{esVecina}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{(esToroidePequeno (t) \land (\longitud{t}>1\land \longitud {t[0]-1}>1) \land casilla \ne vecina) \lor (\neg (esToroidePequeno(t)) \yLuego (esVecinaEnFila(casilla, vecina, t) \lor esVecinaEnColumna(casilla, vecina, t) \lor esVecinaEnDiagonalDer(casilla, vecina, t) \lor esVecinaEnDiagonalIzq(casilla, vecina, t)))} \\
+        	\auxpred{esVecina}{casilla : (\ent \times \ent), vecina : (\ent \times \ent), t: $toroide$ }{casilla \ne vecina \yLuego (esVecinaEnFila(casilla, vecina, t) \oLuego esVecinaEnColumna(casilla, vecina, t) \oLuego esVecinaEnDiagonalDer(casilla, vecina, t) \oLuego esVecinaEnDiagonalIzq(casilla, vecina, t)))} \\
         	
-        	\auxpred{siVivaLuego}{t: $toroide$, posicion: \ent \times \ent}{1<cantVecinasVivas(t, posicion)<4}\\
+        	\auxpred{posicionModificada}{t: $toroide$, posicion: \ent \times \ent}{\IfThenElse{estaViva(t,posicion[0],posicion[1])}{siVivaLuego(t, posicion)}{siMuertaLuego(t, posicion)}} \\
         	
-        	\auxpred{siMuertaLuego}{t: $toroide$, posicion: \ent \times \ent}{cantVecinasVivas(t, posicion)=3}\\
+        	\auxpred{siVivaLuego}{t: $toroide$, posicion: \ent \times \ent}{2 \leq cantVecinasVivas(t, posicion) \leq 3} \\
         	
-        	\auxpred{posicionModificada}{t: $toroide$, posicion: \ent \times \ent}{\IfThenElse{t[posicion[0]][posicion[1]]}{siVivaLuego(t, posicion)}{siMuertaLuego(t, posicion)}}
+        	\auxpred{siMuertaLuego}{t: $toroide$, posicion: \ent \times \ent}{cantVecinasVivas(t, posicion)=3} \\
 	
     	\subsection{Funciones Auxiliares}
 	
       	\aux{cantVivas}{t:$toroide$}{\ent}{\sum_{k=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[k]}-1}\IfThenElse{(t[k][j]=\True)}{1}{0}}
       	
-      	\aux{cantVecinasVivas}{t:$toroide$, posicion :\ent \times \ent}{\ent}{\sum_{k=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[k]}-1}\IfThenElse{(esVecina(posicion, (j, k), t) \land t[k][j]=\True)}{1}{0}}
+      	\aux{cantVecinasVivas}{t:$toroide$, posicion :\ent \times \ent}{\ent}{\sum_{k=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[k]}-1}\IfThenElse{(esVecina(posicion, (j, k), t) \land estaViva(t,k,j))}{1}{0}}
 	
-        \aux{posicionesTotales}{t:$toroide$}{\ent}{\longitud{t} \times \longitud{t[0]}}	% Podría ser una auxiliar que arroje la cantidad de celdas posicionesTotales(t);
+        \aux{posicionesTotales}{t:$toroide$}{\ent}{\longitud{t} \times \longitud{t[0]}}	% Podría ser una auxiliar que arroje la cantidad de celdas posicionesTotales(t); Lo pense pero es super simple la cuenta y no se si nos sirve para mucho. pero me da igual.
 	
 	
 	
 	\section{Decisiones tomadas}
 	% Sólo para decisiones de alto nivel, no para explicar la solución a los ejercicios: CONSULTAR!
-	
-	% Decimos lo que pensamos hacer con respecto a ser vecino de uno mismo.
 	
 \end{document}
