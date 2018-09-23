@@ -75,9 +75,11 @@
     		\post{(\forall i:\ent)(enRango(i,t1) \implicaLuego (\forall j:\ent)(enRango(j,t1[0]) \implicaLuego ( (estaViva(t1,i,j)) \land estaViva(t2,i,j) = estaViva(res,i,j))))}
     	\end{proc} \\
 	
+	    % Con la especificación de vistaTrasladada me quedan dudas si a y b son "existe". Por otro lado, ver cómo hacemos cuando i+a pasa el borde e idem con j+b. Pensando como en implementación (imposible no hacerlo) haría como una función que "desplace" el valor de la celda. Lo importante es que claramente está incompleta o directamente hay que reformular.
+	
 	    \begin{proc}{vistaTrasladada}{\In t1: $toroide$, \In t2: $toroide$, \Out res: \bool}{}
-    		\pre{valido(t)}
-    		\post{}
+    		\pre{valido(t1) \land valido(t2) \land mismasDimensiones(t1,t2)}
+    		\post{res \iff (\forall i : \ent)(enRango(i,t1) \implicaLuego (\forall j : \ent)(enRango(j,t1[0]) \implicaLuego (\exists a : \ent)(enRango(a,t1) \yLuego (\exists b : \ent)(enRango(b,t1[0]) \yLuego (estaViva(t1,i,j)=estaViva(t2,i+a,j+b) ) ) ) ) )}
     	\end{proc} \\
     	
     	\begin{proc}{enCrecimiento}{\In t: $toroide$, \Out res: \bool}{}
