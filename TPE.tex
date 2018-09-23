@@ -42,12 +42,12 @@
 	    
 	    \begin{proc}{evolucionDePosicion}{\In t: $toroide$, \In posicion: \ent \times \ent, \Out result: \bool}{}
 		    \pre{valido(t) \yLuego (0 \leq posicion[0] < \longitud{t} \land 0 \leq posicion[1] < \longitud{t[0]}}
-		    \post{result = \IfThenElse{t[posicion[0]][posicion[1]]}{siVivaLuego(t, posicion)}{siMuertaLuego(t, posicion)}}
+		    \post{result = posicionModificada(t, posicion)}
 	    \end{proc} \\
 	    
 	    \begin{proc}{evolucionToroide}{\Inout t: $toroide$}{}
 		    \pre{valido(t)}
-		    \post{\paraTodo{i}{0}{\longitud{t}} \implicaLuego \paraTodo{j}{0}{\longitud{t[0]}}\implicaLuego t[i][j]=\IfThenElse{t[i][j]}{siVivaLuego(t, (i, j))}{siMuertaLuego(t, (i, j)}}
+		    \post{\paraTodo{i}{0}{\longitud{t}} \implicaLuego \paraTodo{j}{0}{\longitud{t[0]}}\implicaLuego t[i][j]=posicionModificada(t, (i, j))}
 	    \end{proc} \\
 	
 	
@@ -78,6 +78,8 @@
         	\auxpred{siVivaLuego}{t: $toroide$, posicion: \ent \times \ent}{1<cantVecinasVivas(t, posicion)<4}\\
         	
         	\auxpred{siMuertaLuego}{t: $toroide$, posicion: \ent \times \ent}{cantVecinasVivas(t, posicion)=3}\\
+        	
+        	\auxpred{posicionModificada}{t: $toroide$, posicion: \ent \times \ent}{\IfThenElse{t[posicion[0]][posicion[1]]}{siVivaLuego(t, posicion)}{siMuertaLuego(t, posicion)}}
 	
     	\subsection{Funciones Auxiliares}
 	
