@@ -64,10 +64,10 @@
 		    \post{toroideModificadoUnTick(T0, t)}
 	    \end{proc} \\
 	    
-	    \subsection{Problema 6 \importante}
+	    \subsection{Problema 6}
 	    
 	    \begin{proc}{evolucionMultiple}{\In t: $toroide$, \In k: \ent, \Out result: $toroide$}{}
-    		\pre{valido(t) \land esPositivo(k)}
+    		\pre{valido(t) \land esNatural(k)}
     		\post{toroideModificadoMultiplesVeces(t, result, k)}
     	\end{proc} \\
     	
@@ -75,35 +75,37 @@
     	
     	\begin{proc}{esPeriodico}{\In t: $toroide$, \Inout p: \ent, \Out result: \bool}{}
     		\pre{valido(t) \land p = P0}
-    		\post{result = \True \iff (\exists k: \ent)(k > 0 \land toroideModificadoMultiplesVeces(t,t,k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,t,j)) \land p = k)) } 
+    		\post{result = \True \iff (\exists k: \ent)(esNatural(k) \land toroideModificadoMultiplesVeces(t,t,k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,t,j)) \land p = k)) } 
     	\end{proc} \\
     	
     	\subsection{Problema 8}
     	
     	\begin{proc}{primosLejanos}{\In t1: $toroide$, \In t2: $toroide$, out primos: \bool}{}
     		\pre{valido(t1) \land valido(t2)}
-    		\post{primos = \True \iff (\exists k:\ent)(k>0 \land (toroideModificadoMultiplesVeces(t1, t2, k) \lor toroideModificadoMultiplesVeces(t2, t1 , k) ))}
+    		\post{primos = \True \iff (\exists k:\ent)(esNatural(k) \land (toroideModificadoMultiplesVeces(t1, t2, k) \lor toroideModificadoMultiplesVeces(t2, t1 , k) ))}
     	\end{proc} \\
     	
     	\subsection{Problema 9}
     	
     	\begin{proc}{seleccionNatural}{\In ts: \TLista{$toroide$}, \Out res: \ent}{}
     		\pre{todosValidos(ts)}
-    		\post{enRango(res, ts) \yLuego pertenece(ts, ts[res]) \land ((\exists i:\ent)(0 \leq i < \longitud{ts} \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor \paraTodo{j}{(0}{\longitud{ts} \implicaLuego (\exists k: \ent) (k>0 \yLuego TicksParaMorir(t[j], k) \land (\exists h : \ent)(TicksParaMorir(t[res]), h \land h \leq k))))}}
-    	\end{proc} \\
+    		\post{enRango(res, ts) \yLuego (pertenece(ts, ts[res]) \land ((\exists i:\ent)(enRango(i,ts) \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor (\forall j:\ent)(enRango(j,ts) \implicaLuego (\exists k: \ent) (esNatural(k) \yLuego TicksParaMorir(t[j], k) \land (\exists h : \ent)(TicksParaMorir(t[res]), h \land h \leq k))))) }
+    	\end{proc} \\ 
+    	
+    	% ELÍAS: Acá donde dice "ticksParaMorir(t[res])" me queda la duda cómo es ese "exists" porque hay una coma con una h. No entiendo si faltan paréntesis. REVISAR.
     	
     	\subsection{Problema 10}
     	
     	\begin{proc}{fusionar}{\In t1: $toroide$, \In t2: $toroide$, \Out res: $toroide$}{}
     		\pre{valido(t1) \land valido(t2) \land mismasDimensiones(t1,t2)}
-    		\post{(\forall i:\ent)(enRango(i,t1) \implicaLuego (\forall j:\ent)(enRango(j,t1[0]) \implicaLuego (estaViva(res,i,j)=(estaViva(t1,i,j)) \land estaViva(t2,i,j))))}
+    		\post{(\forall i:\ent)(enRangoFilas(i,t1) \implicaLuego (\forall j:\ent)(enRangoColumnas(j,t1) \implicaLuego (estaViva(res,i,j)=(estaViva(t1,i,j)) \land estaViva(t2,i,j))))}
     	\end{proc} \\
     	
     	\subsection{Problema 11}
 	
 	    \begin{proc}{vistaTrasladada}{\In t1: $toroide$, \In t2: $toroide$, \Out res: \bool}{}
     		\pre{valido(t1) \land valido(t2) \land mismasDimensiones(t1,t2)}
-    		\post{res = \True \iff (\forall i : \ent)(enRango(i,t1) \implicaLuego (\forall j : \ent)(enRango(j,t1[0]) \implicaLuego (\exists a : \ent)(enRango(a,t1) \yLuego (\exists b : \ent)(enRango(b,t1[0]) \yLuego (estaViva(t1,i,j)=estaViva(t2,corregirPosicionFila(i+a),corregirPosicionColumna(j+b)) ) ) ) ) )}
+    		\post{res = \True \iff (\forall i : \ent)(enRangoFilas(i,t1) \implicaLuego (\forall j : \ent)(enRangoColumnas(j,t1) \implicaLuego (\exists a : \ent)(enRangoFilas(a,t1) \yLuego (\exists b : \ent)(enRangoColumnas(b,t1) \yLuego (estaViva(t1,i,j)=estaViva(t2,corregirPosicionFila(i+a),corregirPosicionColumna(j+b)) ) ) ) ) )}
     	\end{proc} \\
     	
     	\subsection{Problema 12}
@@ -119,17 +121,17 @@
 	
         	\auxpred {valido}{t:$toroide$}{\longitud{t}>0 \land (\forall i:\ent)(enRangoFilas(i,t) \implicaLuego (\forall j:\ent)(enRangoFilas(j,t) \implicaLuego (\longitud{t[i]}>0 \land mismaCantidadColumnas(t,i,j) ) ) )} \\
         	
+        	\auxpred{enRango}{i:\ent, s:\TLista{T}}{ 0 \leq i < \longitud{s}} \\
+        	
 	        \auxpred{enRangoFilas}{i:\ent, t:$toroide$}{ 0 \leq i < \longitud{s}} \\
+	        
+	        \auxpred{enRangoColumnas}{j:\ent, t:$toroide$}{ 0 \leq j < \longitud{s[0]}} \\
         	
         	\auxpred{mismaCantidadColumnas}{t:$toroide$, i:\ent, j:\ent}{\longitud{t[i]}=\longitud{t[j]}} \\
 	        
-	        \auxpred{enRango}{i:\ent, s:\TLista{T}}{ 0 \leq i < \longitud{s}} \\
-	        
-	        \auxpred{enRangoColumnas}{j:\ent, t:$toroide$}{ 0 \leq j < \longitud{s[0]}} \\
-	        
 	        \auxpred{estaViva}{t:$toroide$, i:\ent, j:\ent}{t[i][j]=\True} \\
 	
-        	\auxpred {noRepetidos}{t:$toroide$}{\paraTodo{i,j}{(0}{\longitud{t} \land i\ne j) \implicaLuego t[i] \ne t[j]}} \\
+        	\auxpred {noRepetidos}{t:$toroide$}{(\forall i:\ent)(enRango(i,t) \implicaLuego (\forall j:\ent)((enRango(j,t) \land i \ne j) \implicaLuego t[i] \ne t[j] ) )} \\
 
         	\auxpred{posicionModificada}{t: $toroide$, posicion: \ent \times \ent}{\IfThenElse{estaViva(t,posicion[0],posicion[1])}{siVivaLuego(t, posicion)}{siMuertaLuego(t, posicion)}} \\
         	
@@ -137,11 +139,13 @@
         	
         	\auxpred{siMuertaLuego}{t: $toroide$, posicion: \ent \times \ent}{cantVecinasVivas(t, posicion)=3} \\
         	
-        	\auxpred{toroideModificadoUnTick}{t1: $toroide$, t2: $toroide$}{(\forall i:\ent)(enRango(i,t) \implicaLuego (\forall j:\ent) (enRango(j,t[0]) \implicaLuego t2[i][j]=posicionModificada(t1, (i, j))))} \\
+        	\auxpred{toroideModificadoUnTick}{t1: $toroide$, t2: $toroide$}{(\forall i:\ent)(enRangoFilas(i,t) \implicaLuego (\forall j:\ent) (enRangoColumnas(j,t) \implicaLuego t2[i][j]=posicionModificada(t1, (i, j))))} \\
+        	
+        	\auxpred{esNatural}{n:\ent}{n>0} \\
         	
         	\auxpred{toroideModificadoMultiplesVeces}{t1: $toroide$, t2: $toroide$, k: \ent}{(\exists ts: \TLista{$toroide$})(\longitud{ts} = k+1 \yLuego (t2 = ts[k] \land t1= ts[0] \land  (\forall i : \ent)(0 \leq i < k \implicaLuego toroideModificadoUnTick(ts[i],ts[i+1]) ) ) )} \\
         	
-        	\auxpred{toroideInmortal}{t : $toroide$}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego (\forall k:\ent) (k>0 \implicaLuego \neg toroideModificadoMultiplesVeces(t, tm, k))} \\
+        	\auxpred{toroideInmortal}{t : $toroide$}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego (\forall k:\ent) (esNatural(k) \implicaLuego \neg toroideModificadoMultiplesVeces(t, tm, k))} \\
         	
         	\auxpred{TicksParaMorir}{t : $toroide$, k: \ent}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego toroideModificadoMultiplesVeces(t, tm, k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,tm,j))} \\
         	
@@ -153,11 +157,11 @@
         	
         	\auxpred{todosValidos}{ts:\TLista{$toroide$}}{(\forall i:\ent)(enRango(i,ts) \implicaLuego valido(ts[i]) )} \\
         	
-        	\auxpred{pertenece}{ts:\TLista{$toroide$}, t: $toroides$}{(\exists i: \ent)(enRango(i, ts) \yLuego t=ts[i]))}
+        	\auxpred{pertenece}{ts:\TLista{$toroide$}, t: $toroide$}{(\exists i: \ent)(enRango(i, ts) \yLuego t=ts[i]))} \\
         	
-        	\auxpred{tableroVivo}{t:$toroide$}{(\exists i:\ent)(enRango(i,t) \yLuego (\exists j:\ent)(enRango(j,t[0]) \yLuego estaViva(t,i,j) ) )} \\
+        	\auxpred{tableroVivo}{t:$toroide$}{(\exists i:\ent)(enRangoFilas(i,t) \yLuego (\exists j:\ent)(enRangoColumnas(j,t) \yLuego estaViva(t,i,j) ) )} \\
 	
-	        \auxpred{tableroMuerto}{t:$toroide$}{\paraTodo{i}{0}{\longitud{t} \implicaLuego \paraTodo{j}{0}{\longitud{t[0]}} \implicaLuego t[i][j]= \False}}
+	        \auxpred{tableroMuerto}{t:$toroide$}{\neg tableroVivo(t)}
 	
         \subsection{Funciones Auxiliares} \vspace{1em}
 	
