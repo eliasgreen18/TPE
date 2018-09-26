@@ -33,14 +33,14 @@
     	
     	\begin{proc}{esValido}{\In t: $toroide$, \Out result: $\bool$}{}
     		\pre{\True}
-    		\post{result \iff valido(t) }
+    		\post{result = \True \iff valido(t) }
     	\end{proc} \\
     	
     	\subsection{Problema 2}
 	
     	\begin{proc}{posicionesVivas}{\In t: $toroide$, \Out result: \TLista{\ent\times\ent}}{}
     		\pre{valido(t)}
-    		\post{\longitud{result}=cantVivas(t) \land noRepetidos(result) \land (\forall i:\ent) ((enRango(i,result) \implicaLuego (enRango(result[i][0],t) \land enRango(result[i][1],t[0]) ) \yLuego  estaViva(t[result[i][0]][result[i][1]])))}
+    		\post{\longitud{result}=cantVivas(t) \land noRepetidos(result) \land (\forall i:\ent) ((enRango(i,result) \implicaLuego (enRangoFilas(result[i][0],t) \land enRangoColumnas(result[i][1],t) ) \yLuego  estaViva(t[result[i][0]][result[i][1]])))}
 	    \end{proc} \\
 	    
 	    \subsection{Problema 3}
@@ -66,67 +66,66 @@
 	    
 	    \subsection{Problema 6 \importante}
 	    
-	    \begin{proc}{evolucionMultiple}{\Inout t: $toroide$, \In k: \ent, \Out result: $toroide$}{}
+	    \begin{proc}{evolucionMultiple}{\In t: $toroide$, \In k: \ent, \Out result: $toroide$}{}
     		\pre{valido(t) \land esPositivo(k)}
     		\post{toroideModificadoMultiplesVeces(t, result, k)}
-    		%(\exists ts: \TLista{$toroide$})(\longitud{ts} = k+1 \yLuego (result = ts[k] \land  (\forall i : \ent)(0 \leq i < k \implicaLuego toroideModificadoUnTick(ts[i],ts[i+1]) ) ) )}
     	\end{proc} \\
     	
     	\subsection{Problema 7}
     	
     	\begin{proc}{esPeriodico}{\In t: $toroide$, \Inout p: \ent, \Out result: \bool}{}
-    		\pre{valido(t) \land esPositivo(p) \land p = P0}
-    		\post{result \iff (\exists k: \ent)(k > 0 \land toroideModificadoMultiplesVeces(t,t,k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,t,j)) \land p = k)) } % Recordar que debo especificar sobre qué sucede con p y con res;
+    		\pre{valido(t) \land p = P0}
+    		\post{result = \True \iff (\exists k: \ent)(k > 0 \land toroideModificadoMultiplesVeces(t,t,k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,t,j)) \land p = k)) } 
     	\end{proc} \\
     	
     	\subsection{Problema 8}
     	
     	\begin{proc}{primosLejanos}{\In t1: $toroide$, \In t2: $toroide$, out primos: \bool}{}
     		\pre{valido(t1) \land valido(t2)}
-    		\post{\exists(k>0 \land (toroideModificadoMultiplesVeces(t1, t2, k) \lor toroideModificadoMultiplesVeces(t2, t1 , k) ))}
+    		\post{primos = \True \iff (\exists k:\ent)(k>0 \land (toroideModificadoMultiplesVeces(t1, t2, k) \lor toroideModificadoMultiplesVeces(t2, t1 , k) ))}
     	\end{proc} \\
     	
     	\subsection{Problema 9}
     	
     	\begin{proc}{seleccionNatural}{\In ts: \TLista{$toroide$}, \Out res: \ent}{}
     		\pre{todosValidos(ts)}
-    		\post{}
+    		\post{enRango(res, ts) \yLuego pertenece(ts, ts[res]) \land ((\exists i:\ent)(0 \leq i < \longitud{ts} \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor \paraTodo{j}{(0}{\longitud{ts} \implicaLuego (\exists k: \ent) (k>0 \yLuego TicksParaMorir(t[j], k) \land (\exists h : \ent)(TicksParaMorir(t[res]), h \land h \leq k))))}}
     	\end{proc} \\
     	
     	\subsection{Problema 10}
     	
     	\begin{proc}{fusionar}{\In t1: $toroide$, \In t2: $toroide$, \Out res: $toroide$}{}
     		\pre{valido(t1) \land valido(t2) \land mismasDimensiones(t1,t2)}
-    		\post{(\forall i:\ent)(enRango(i,t1) \implicaLuego (\forall j:\ent)(enRango(j,t1[0]) \implicaLuego ( (estaViva(t1,i,j)) \land estaViva(t2,i,j) = estaViva(res,i,j))))}
+    		\post{(\forall i:\ent)(enRango(i,t1) \implicaLuego (\forall j:\ent)(enRango(j,t1[0]) \implicaLuego (estaViva(res,i,j)=(estaViva(t1,i,j)) \land estaViva(t2,i,j))))}
     	\end{proc} \\
     	
     	\subsection{Problema 11}
 	
-	    % Con la especificación de vistaTrasladada me quedan dudas si a y b son "existe". Por otro lado, ver cómo hacemos cuando i+a pasa el borde e idem con j+b. Pensando como en implementación (imposible no hacerlo) haría como una función que "desplace" el valor de la celda. Lo importante es que claramente está incompleta o directamente hay que reformular.
-	    
-	    % Recién fui al baño y pensé que como i y a están enRango, i+a va a estar entre 0 y 2|t|, es decir, nuestro "problema" es cuando está entre |t| y 2|t|. Podríamos ver de especificar es y listo. (Ahora sí vuelvo a dormir).
-	    
-	    % Es decir, necesitamos hacer que cuando la fila sea entre |t| y 2.|t| las cuente como si estuvieran entre 0 y |t| o les reste |t| para entrar al rango o algo así. JAJAJA.
-	
 	    \begin{proc}{vistaTrasladada}{\In t1: $toroide$, \In t2: $toroide$, \Out res: \bool}{}
     		\pre{valido(t1) \land valido(t2) \land mismasDimensiones(t1,t2)}
-    		\post{res \iff (\forall i : \ent)(enRango(i,t1) \implicaLuego (\forall j : \ent)(enRango(j,t1[0]) \implicaLuego (\exists a : \ent)(enRango(a,t1) \yLuego (\exists b : \ent)(enRango(b,t1[0]) \yLuego (estaViva(t1,i,j)=estaViva(t2,i+a,j+b) ) ) ) ) )}
+    		\post{res = \True \iff (\forall i : \ent)(enRango(i,t1) \implicaLuego (\forall j : \ent)(enRango(j,t1[0]) \implicaLuego (\exists a : \ent)(enRango(a,t1) \yLuego (\exists b : \ent)(enRango(b,t1[0]) \yLuego (estaViva(t1,i,j)=estaViva(t2,corregirPosicionFila(i+a),corregirPosicionColumna(j+b)) ) ) ) ) )}
     	\end{proc} \\
     	
     	\subsection{Problema 12}
     	
     	\begin{proc}{enCrecimiento}{\In t: $toroide$, \Out res: \bool}{}
     		\pre{valido(t)}
-    		\post{}
-    	\end{proc} \\
+    		\post{res = \True \iff (\exists t2 : $toroide$)(mismasDimensiones(t, t2) \yLuego (toroideModificadoUnTick(t, t2) \land cantVivas(t)<cantVivas(t2)))}
+    	\end{proc} 
 	
-	\section{Predicados y Auxiliares generales}
+	\section{Auxiliares}
 	
-    	\subsection{Predicados}
+    	\subsection{Predicados} \vspace{1em}
 	
-        	\auxpred {valido}{t:$toroide$}{0<\longitud{t} \yLuego \paraTodo{i, j}{0}{\longitud{t}} \implicaLuego (\longitud {t[i]}= \longitud{t[j]} \land \longitud {t[i]}>0)} \\
+        	\auxpred {valido}{t:$toroide$}{\longitud{t}>0 \land (\forall i:\ent)(enRangoFilas(i,t) \implicaLuego (\forall j:\ent)(enRangoFilas(j,t) \implicaLuego (\longitud{t[i]}>0 \land mismaCantidadColumnas(t,i,j) ) ) )} \\
+        	
+	        \auxpred{enRangoFilas}{i:\ent, t:$toroide$}{ 0 \leq i < \longitud{s}} \\
+        	
+        	\auxpred{mismaCantidadColumnas}{t:$toroide$, i:\ent, j:\ent}{\longitud{t[i]}=\longitud{t[j]}} \\
 	        
-	        \auxpred{enRango}{i:\ent, s:\TLista{T}}{ $0 \leq i < \longitud{s}$} \\
+	        \auxpred{enRango}{i:\ent, s:\TLista{T}}{ 0 \leq i < \longitud{s}} \\
+	        
+	        \auxpred{enRangoColumnas}{j:\ent, t:$toroide$}{ 0 \leq j < \longitud{s[0]}} \\
 	        
 	        \auxpred{estaViva}{t:$toroide$, i:\ent, j:\ent}{t[i][j]=\True} \\
 	
@@ -138,13 +137,13 @@
         	
         	\auxpred{siMuertaLuego}{t: $toroide$, posicion: \ent \times \ent}{cantVecinasVivas(t, posicion)=3} \\
         	
-        	\auxpred{TorideModificadoUnTick}{t1: $toroide$, t2: $toroide$}{(\forall i:\ent)(enRango(i,t) \implicaLuego (\forall j:\ent) (enRango(j,t[0]) \implicaLuego t2[i][j]=posicionModificada(t1, (i, j))))}
+        	\auxpred{toroideModificadoUnTick}{t1: $toroide$, t2: $toroide$}{(\forall i:\ent)(enRango(i,t) \implicaLuego (\forall j:\ent) (enRango(j,t[0]) \implicaLuego t2[i][j]=posicionModificada(t1, (i, j))))} \\
         	
-        	\auxpred{ToroideModificadoMultiplesVeces}{t1: $toroide$, t2: $toroide$, k: \ent}{(\exists ts: \TLista{$toroide$})(\longitud{ts} = k+1 \yLuego (t2 = ts[k] \land t1= ts[0] \land  (\forall i : \ent)(0 \leq i < k \implicaLuego toroideModificadoUnTick(ts[i],ts[i+1]) ) ) )}
-    	
-        	% Estuve pensando y acá también nos surge el tema de que una casilla puede ser considerada vecina dos o más veces. Se puede ver en el ejemplo del toroide de 2x3 que ponenen en el enunciado. Ahí, por ejemplo, cualquier celda, el vecino de arriba y el de abajo van a ser el mismo, lo mismo pasa con las diagonales
+        	\auxpred{toroideModificadoMultiplesVeces}{t1: $toroide$, t2: $toroide$, k: \ent}{(\exists ts: \TLista{$toroide$})(\longitud{ts} = k+1 \yLuego (t2 = ts[k] \land t1= ts[0] \land  (\forall i : \ent)(0 \leq i < k \implicaLuego toroideModificadoUnTick(ts[i],ts[i+1]) ) ) )} \\
         	
-        	\auxpred{esPositivo}{n:\ent}{0 \leq n} \\
+        	\auxpred{toroideInmortal}{t : $toroide$}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego (\forall k:\ent) (k>0 \implicaLuego \neg toroideModificadoMultiplesVeces(t, tm, k))} \\
+        	
+        	\auxpred{TicksParaMorir}{t : $toroide$, k: \ent}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego toroideModificadoMultiplesVeces(t, tm, k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,tm,j))} \\
         	
         	\auxpred{mismasDimensiones}{t1: $toroide$, t2: $toroide$}{mismaCantidadFilas(t1,t2) \land  mismaCantidadColumnas(t1,t2)} \\
         	
@@ -154,13 +153,17 @@
         	
         	\auxpred{todosValidos}{ts:\TLista{$toroide$}}{(\forall i:\ent)(enRango(i,ts) \implicaLuego valido(ts[i]) )} \\
         	
+        	\auxpred{pertenece}{ts:\TLista{$toroide$}, t: $toroides$}{(\exists i: \ent)(enRango(i, ts) \yLuego t=ts[i]))}
+        	
         	\auxpred{tableroVivo}{t:$toroide$}{(\exists i:\ent)(enRango(i,t) \yLuego (\exists j:\ent)(enRango(j,t[0]) \yLuego estaViva(t,i,j) ) )} \\
 	
-        \subsection{Funciones Auxiliares}
+	        \auxpred{tableroMuerto}{t:$toroide$}{\paraTodo{i}{0}{\longitud{t} \implicaLuego \paraTodo{j}{0}{\longitud{t[0]}} \implicaLuego t[i][j]= \False}}
+	
+        \subsection{Funciones Auxiliares} \vspace{1em}
 	
             \aux{cantVivas}{t:$toroide$}{\ent}{\sum_{i=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[i]}-1}\IfThenElse{estaViva(t,i,j)}{1}{0}} \vspace{1em}
       	
-            \aux{cantVecinasVivas}{t:$toroide$, posicion :\ent \times \ent}{\ent}{\sum_{i=-1}^{1}\sum_{j=-1}^{1}\IfThenElse{(j \ne 0 \land i \ne 0) \land t[posicion[0]+(i \mod \longitud{t})][posicion[1]+(j \mod \longitud{t}))}{1}{0}} \vspace{1em}
+            \aux{cantVecinasVivas}{t:$toroide$, posicion :\ent \times \ent}{\ent}{\sum_{i=-1}^{1}\sum_{j=-1}^{1}\IfThenElse{(j \ne 0 \land i \ne 0) \land estaViva(t, (posicion[0]+(i \mod \longitud{t})),(posicion[1]+(j \mod \longitud{t})))}{1}{0}} \vspace{1em}
 	
             \aux{posicionesTotales}{t:$toroide$}{\ent}{\longitud{t} \times \longitud{t[0]}} \vspace{1em}
         
@@ -168,9 +171,8 @@
         
             \aux{cantidadColumnas}{t:$toroide$}{\ent}{\longitud{t[0]}} \vspace{1em}
             
-            \aux{muereEn}{t:$toroide$}{\ent}{} % Una función que determine cuánto tarda en morir. La estoy pensando. Todo lo que escribo siempre depende de que se pueda hacer esa lista de transiciones de un tick a otro del toroide.
-	
+            \aux{corregirPosicionFila}{t:$toroide$,i:\ent}{\ent}{i \bmod cantidadFilas(t)} \vspace{1em}
+            
+            \aux{corregirPosicionColumna}{t:$toroide$,j:\ent}{\ent}{j \bmod cantidadColumnas(t)} \vspace{1em}
+
 \end{document}
-
-% Hacer modulador del corrimiento (corregirCorrimiento).
-
