@@ -89,10 +89,8 @@
     	
     	\begin{proc}{seleccionNatural}{\In ts: \TLista{$toroide$}, \Out res: \ent}{}
     		\pre{todosValidos(ts)}
-    		\post{enRango(res, ts) \yLuego (pertenece(ts, ts[res]) \land ((\exists i:\ent)(enRango(i,ts) \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor (\forall j:\ent)(enRango(j,ts) \implicaLuego (\exists k: \ent) (esNatural(k) \yLuego TicksParaMorir(t[j], k) \land (\exists h : \ent)(TicksParaMorir(t[res]), h \land h \leq k))))) }
+    		\post{enRango(res, ts) \yLuego (pertenece(ts, ts[res]) \land ((\exists i:\ent)(enRango(i,ts) \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor (\forall j:\ent)(enRango(j,ts) \implicaLuego (\exists k: \ent) (esNatural(k) \yLuego TicksParaMorir(t[j], k) \land (\exists h : \ent)(esNatural(h) \yLuego TicksParaMorir(t[res], h) \land h \leq k))))) }
     	\end{proc} \\ 
-    	
-    	% ELÍAS: Acá donde dice "ticksParaMorir(t[res])" me queda la duda cómo es ese "exists" porque hay una coma con una h. No entiendo si faltan paréntesis. REVISAR.
     	
     	\subsection{Problema 10}
     	
@@ -167,7 +165,7 @@
 	
             \aux{cantVivas}{t:$toroide$}{\ent}{\sum_{i=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[i]}-1}\IfThenElse{estaViva(t,i,j)}{1}{0}} \vspace{1em}
       	
-            \aux{cantVecinasVivas}{t:$toroide$, posicion :\ent \times \ent}{\ent}{\sum_{i=-1}^{1}\sum_{j=-1}^{1}\IfThenElse{(j \ne 0 \land i \ne 0) \land estaViva(t, (posicion[0]+(i \mod \longitud{t})),(posicion[1]+(j \mod \longitud{t})))}{1}{0}} \vspace{1em}
+            \aux{cantVecinasVivas}{t:$toroide$, posicion :\ent \times \ent}{\ent}{\sum_{i=-1}^{1}\sum_{j=-1}^{1}\IfThenElse{(j \ne 0 \land i \ne 0) \land estaViva(t, ((posicion[0]+i) \mod \longitud{t}),((posicion[1]+j) \mod \longitud{t}))}{1}{0}} \vspace{1em}
 	
             \aux{posicionesTotales}{t:$toroide$}{\ent}{\longitud{t} \times \longitud{t[0]}} \vspace{1em}
         
