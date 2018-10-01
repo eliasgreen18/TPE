@@ -89,14 +89,14 @@
     	
     	\begin{proc}{seleccionNatural}{\In ts: \TLista{$toroide$}, \Out res: \ent}{}
     		\pre{todosValidos(ts)}
-    		\post{enRango(res, ts) \yLuego (pertenece(ts, ts[res]) \land ((\exists i:\ent)(enRango(i,ts) \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor (\forall j:\ent)(enRango(j,ts) \implicaLuego (\exists k: \ent) (esNatural(k) \yLuego TicksParaMorir(t[j], k) \land (\exists h : \ent)(esNatural(h) \yLuego TicksParaMorir(t[res], h) \land h \leq k))))) }
+    		\post{enRango(res, ts) \yLuego (pertenece(ts, ts[res]) \land ((\exists i:\ent)(enRango(i,ts) \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor (\forall j:\ent)(enRango(j,ts) \implicaLuego (\exists k: \ent) (esNatural(k) \yLuego ticksParaMorir(t[j], k) \land (\exists h : \ent)(esNatural(h) \yLuego ticksParaMorir(t[res], h) \land h \leq k))))) }
     	\end{proc} \\ 
     	
     	\subsection{Problema 10}
     	
     	\begin{proc}{fusionar}{\In t1: $toroide$, \In t2: $toroide$, \Out res: $toroide$}{}
     		\pre{valido(t1) \land valido(t2) \land mismasDimensiones(t1,t2)}
-    		\post{(\forall i:\ent)(enRangoFilas(i,t1) \implicaLuego (\forall j:\ent)(enRangoColumnas(j,t1) \implicaLuego (estaViva(res,i,j)=(estaViva(t1,i,j)) \land estaViva(t2,i,j))))}
+    		\post{(\forall i:\ent)(enRangoFilas(i,t1) \implicaLuego (\forall j:\ent)(enRangoColumnas(j,t1) \implicaLuego (estaViva(res,i,j) = \True \iff (estaViva(t1,i,j)) \land estaViva(t2,i,j))))}
     	\end{proc} \\
     	
     	\subsection{Problema 11}
@@ -145,7 +145,7 @@
         	
         	\auxpred{toroideInmortal}{t : $toroide$}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego (\forall k:\ent) (esNatural(k) \implicaLuego \neg toroideModificadoMultiplesVeces(t, tm, k))} \\
         	
-        	\auxpred{TicksParaMorir}{t : $toroide$, k: \ent}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego toroideModificadoMultiplesVeces(t, tm, k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,tm,j))} \\
+        	\auxpred{ticksParaMorir}{t : $toroide$, k: \ent}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego toroideModificadoMultiplesVeces(t, tm, k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,tm,j))} \\
         	
         	\auxpred{mismasDimensiones}{t1: $toroide$, t2: $toroide$}{mismaCantidadFilas(t1,t2) \land  mismaCantidadColumnas(t1,t2)} \\
         	
