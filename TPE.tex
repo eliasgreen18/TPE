@@ -82,7 +82,7 @@
     	
     	\begin{proc}{esPeriodico}{\In t: $toroide$, \Inout p: \ent, \Out result: \bool}{}
     		\pre{valido(t) \land p = P0}
-    		\post{result = \True \iff (\exists k: \ent)(esNatural(k) \land toroideModificadoMultiplesVeces(t,t,k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,t,j)) \land p = k)) } 
+    		\post{result = \True \land (\exists k: \ent)(esNatural(k) \land toroideModificadoMultiplesVeces(t,t,k) \land \paraTodo{j}{(1}{k} \implicaLuego \neg (toroideModificadoMultiplesVeces(t,t,j)) \land p = k)) } 
     	\end{proc} \\
     	
     	\subsection{Problema 8}
@@ -95,8 +95,8 @@
     	\subsection{Problema 9}
     	
     	\begin{proc}{seleccionNatural}{\In ts: \TLista{$toroide$}, \Out res: \ent}{}
-    		\pre{todosValidos(ts)}
-    		\post{enRango(res, ts) \yLuego (pertenece(ts, ts[res]) \land ((\exists i:\ent)(enRango(i,ts) \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor (\forall j:\ent)(enRango(j,ts) \implicaLuego (\exists k: \ent) (esNatural(k) \yLuego ticksParaMorir(t[j], k) \land (\exists h : \ent)(esNatural(h) \yLuego ticksParaMorir(t[res], h) \land h \leq k))))) }
+    		\pre{\longitud{ts} > 0 \yLuego todosValidos(ts)}
+    		\post{enRango(res, ts) \yLuego ((\exists i:\ent)(enRango(i,ts) \yLuego (toroideInmortal(ts[i]) \land res = i)) \lor (\exists h : \ent)(esNatural(h) \yLuego ticksParaMorir(t[res], h)  \land (\exists k: \ent) (esNatural(k) \land (\forall j:\ent)(enRango(j,ts) \implicaLuego  ticksParaMorir(t[j], k) \land h \geq k)))))}
     	\end{proc} \\ 
     	
     	\subsection{Problema 10}
@@ -122,9 +122,13 @@
     		\post{res=\True \iff(\exists t1:$toroide$)(mismasDimensiones(t, t1)\yLuego \\ toroideModificadoUnTick(t, t1) \land mayorSuperficie(t, t1))}
     	\end{proc} 
     	
-    	% ELÍAS: (tableroMuerto(t) \implies res=\False)\land(tableroVivo(t) \implies (res=\True \iff(\exists t1:$toroide$)(mismasDimensiones(t, t1)\yLuego toroideModificadoUnTick(t, t1) \land \\ mayorSuperficie(t, t1)))))
+    	\subsection{Problema 13}
     	
-    	% ELÍAS: Dejo en comentario, por las dudas, el que habías escrito vos para que si le echás una ojeada y no te convence (?).
+    	\begin{proc}{cantidadBloques}{\In t: $toroide$, \Out cant: \ent}{}
+        	\pre{esValido(t) \yLuego soloTieneBloques(t)}
+        	\post{cant=numeroDeBloques(t)}
+    	\end{proc}
+   
 	
 	\section{Aclaraciones}
 	    
@@ -137,6 +141,10 @@
 	    \subsection{Problema 12}
 	    
 	        Se consideró un área rectangular que está comprendida entre la primera y la última fila no nula y la primera y la última columna no nula del tablero. 
+	        
+	    \subsection{Problema 13}
+	        
+	        Se caracterizó cada bloque a partir de su esquina superior izquierda, de esa manera de estandarizó para contabilizar cada bloque una sola vez. 
 	    
     	    \newpage
 	
@@ -164,17 +172,17 @@
         	
         	\auxpred{siMuertaLuego}{t: $toroide$, posicion: \ent \times \ent}{cantVecinasVivas(t, posicion)=3} \\
         	
-        	\auxpred{toroideModificadoUnTick}{t1: $toroide$, t2: $toroide$}{(\forall i:\ent)(enRangoFilas(i,t) \implicaLuego (\forall j:\ent) (enRangoColumnas(j,t) \implicaLuego t2[i][j]=posicionModificada(t1, (i, j))))} \\
+        	\auxpred{toroideModificadoUnTick}{t1: $toroide$, t2: $toroide$}{mismasDimensiones(t1, t2) \yLuego ((\forall i:\ent)(enRangoFilas(i,t1) \implicaLuego (\forall j:\ent) (enRangoColumnas(j,t1) \implicaLuego t2[i][j]=posicionModificada(t1, (i, j)))))} \\
         	
         	\auxpred{esNatural}{n:\ent}{n>0} \\
         	
-        	\auxpred{toroideModificadoMultiplesVeces}{t1: $toroide$, t2: $toroide$, k: \ent}{(\exists ts: \TLista{$toroide$})(\longitud{ts} = k+1 \yLuego (t2 = ts[k] \land t1= ts[0] \land  (\forall i : \ent)(0 \leq i < k \implicaLuego toroideModificadoUnTick(ts[i],ts[i+1]) ) ) )} \\
+        	\auxpred{toroideModificadoMultiplesVeces}{t1: $toroide$, t2: $toroide$, k: \ent}{mismasDimensiones(t1, t2) \yLuego ((\exists ts: \TLista{$toroide$})(\longitud{ts} = k+1 \yLuego (t2 = ts[k] \land t1= ts[0] \land  (\forall i : \ent)(0 \leq i < k \implicaLuego toroideModificadoUnTick(ts[i],ts[i+1]) ) ) ))} \\
         	
-        	\auxpred{toroideInmortal}{t : $toroide$}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego (\forall k:\ent) (esNatural(k) \implicaLuego \neg toroideModificadoMultiplesVeces(t, tm, k))} \\
+        	\auxpred{toroideInmortal}{t : $toroide$}{(\exists tm:$toroide$)((mismasDimensiones(t, tm) \land tableroMuerto(tm)) \yLuego (\forall k:\ent) (esNatural(k) \implicaLuego \neg toroideModificadoMultiplesVeces(t, tm, k))} \\
 
-        	\auxpred{ticksParaMorir}{t : $toroide$, k: \ent}{\exists tm:$toroide$)((mismasDimensiones(t, tm) \land \\ tableroMuerto(tm)) \yLuego toroideModificadoMultiplesVeces(t, tm, k) \land \paraTodo{j}{(1}{k} \implicaLuego \\ \neg (toroideModificadoMultiplesVeces(t,tm,j))} \\
+        	\auxpred{ticksParaMorir}{t : $toroide$, k: \ent}{(\exists tm:$toroide$)((mismasDimensiones(t, tm) \land \\ tableroMuerto(tm)) \yLuego toroideModificadoMultiplesVeces(t, tm, k) \land \paraTodo{j}{(1}{k} \implicaLuego \\ \neg (toroideModificadoMultiplesVeces(t,tm,j))} \\
         
-        	\auxpred{transladado}{t1: $toroide$, t2: $toroide$}{(\forall i : \ent)(enRangoFilas(i,t1) \implicaLuego\\ (\forall j : \ent)(enRangoColumnas(j,t1) \implicaLuego (\exists a : \ent)(enRangoFilas(a,t1) \yLuego (\exists b : \ent)(enRangoColumnas(b,t1) \yLuego (estaViva(t1,i,j)=estaViva(t2,corregirPosicionFila(t2, i+a),corregirPosicionColumna(t2 ,j+b)) ) ) ) ) )} \\
+        	\auxpred{transladado}{t1: $toroide$, t2: $toroide$}{(\exists a : \ent)(enRangoFilas(a,t1) \yLuego (\exists b : \ent)(enRangoColumnas(b,t1) \\ \yLuego (\forall i : \ent)(enRangoFilas(i,t1) \implicaLuego (\forall j : \ent)(enRangoColumnas(j,t1) \implicaLuego  (estaViva(t1,i,j)=estaViva(t2,corregirPosicionFila(t2, i+a),corregirPosicionColumna(t2 ,j+b)) ) ) ) ) )} \\
         	
         	\auxpred{minimaRegionConVivas}{t: $toroide$, i:\ent, j:\ent, k:\ent, h:\ent}{\\cantVivas(t)=cantVivasEnRegion(t, i, j, k, h)\land esElMenorRectangulo(t, i, j, k, h) \land \\ noHayOtraVistaDeMenorArea(t, i, j, k, h)} \\
         	
@@ -196,7 +204,11 @@
         	
         	\auxpred{tableroVivo}{t:$toroide$}{(\exists i:\ent)(enRangoFilas(i,t) \yLuego (\exists j:\ent)(enRangoColumnas(j,t) \yLuego estaViva(t,i,j) ) )} \\
 	
-	        \auxpred{tableroMuerto}{t:$toroide$}{\neg tableroVivo(t)}
+	        \auxpred{tableroMuerto}{t:$toroide$}{\neg tableroVivo(t)}\\
+	        
+	        \auxpred {soloTieneBloques}{t:$toroide$}{4*numeroDeBloques(t)=CantVivas(t) \land \\ toroideModificadoUnTick(t,t)}\\
+	        
+	        \auxpred{esBloque}{t:$toroide$, i: \ent, j: \ent}{estaViva(t, i, j) \land cantVecinasVivas(t, (i,j))=3 \land estaViva(t, ((i+1) \mod \longitud{t}), j) \land cantVecinasVivas(t, (((i+1) \mod \longitud{t}),j))=3 \land estaViva(t,((i+1) \mod \longitud{t}), ((j+1)\mod \longitud{t[0]})) \land cantVecinasVivas(t, (((i+1) \mod \longitud{t}),((j+1)\mod \longitud{t[0]})))=3 \land estaViva(t, i, ((j+1)\mod \longitud{t[0]})) \land cantVecinasVivas(t, (i,((j+1)\mod \longitud{t[0]})))=3}\\
 	
 	\newpage
 	
@@ -223,5 +235,6 @@
             \aux{base}{k:\ent,h:\ent}{\ent}{h-k+1} \vspace{1em}
             
             \aux{altura}{i:\ent,j:\ent}{\ent}{j-i+1} \vspace{1em}
-
+    
+            \aux{numeroDeBloques}{t:$toroide$}{\ent}{\sum_{i=0}^{\longitud{t}-1}\sum_{j=0}^{\longitud{t[0]}-1}\IfThenElse{(esBloque(t, i, j))}{1}{0}} \vspace{1em}
 \end{document}
